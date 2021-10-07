@@ -104,11 +104,6 @@ async def main(sites):
         await asyncio.gather(*[_get(site, session) for site in sites])
 
 
-# Need to add flag for parallel site checks to differentiate async function from standard _file function
-if sys.argv[1].endswith(".txt"):
-    with open(sys.argv[1], 'r') as f:
-        sites = [site.rstrip('\n') for site in f]
-    asyncio.run(main(sites))
 
 if len(sys.argv) == 1 or sys.argv[1] == "-h":
     show_help()
@@ -118,7 +113,11 @@ if sys.argv[1].startswith("http"):
     _url(sys.argv[1])
     sys.exit()
 
+# Checking if '-a' prefix for async check of urls in file
+if sys.argv[1] == '-a' and sys.argv[2]:
+    with open(sys.argv[2], 'r') as f:
+        sites = [site.rstrip('\n') for site in f]
+    asyncio.run(main(sites))
+    sys.exit()
 
 _file(sys.argv[1])
-
-#print(_url("http://google.com"))
