@@ -17,10 +17,8 @@ $ pip install --user down
 ## Usage
 ```bash
 Usage: down [file] [url]
-       down -a [file]
 
 Example
   down url_list.txt
-  down -a url_list.txt
   down https://www.example.com
 ```

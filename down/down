@@ -46,22 +46,6 @@ def print_status(up, site):
     sys.stdout.write("{}   {}\n".format(good if up else bad, site))
 
 
-def _file(file):
-    """
-    Check if file exists
-
-    :param file: The path to the file
-    :type file: str
-    """
-    try:
-        with open(file, "r") as f:
-            for site in f:
-                site = site.strip()
-                _url(site)
-    except FileNotFoundError:
-        sys.stdout.write("No such file: {}".format(file))
-
-
 def _url(site):
     """
     Check if site is up
@@ -113,11 +97,12 @@ if sys.argv[1].startswith("http"):
     _url(sys.argv[1])
     sys.exit()
 
-# Checking if '-a' prefix for async check of urls in file
-if sys.argv[1] == '-a' and sys.argv[2]:
-    with open(sys.argv[2], 'r') as f:
-        sites = [site.rstrip('\n') for site in f]
-    asyncio.run(main(sites))
-    sys.exit()
+# Async check of urls in file
+with open(sys.argv[1], 'r') as file:
+    try:
+        sites = [site.rstrip('\n') for site in file]
+    except FileNotFoundError:
+        sys.stdout.write("No such file: {}".format(file))
 
-_file(sys.argv[1])
+asyncio.run(main(sites))
+sys.exit()
